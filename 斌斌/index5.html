@@ -33,7 +33,8 @@
   li {
     cursor: pointer;
   }
-  #queue span{
+
+  #queue span {
     background: red;
     display: inline-block;
     vertical-align: top;
@@ -44,15 +45,13 @@
   let data = []
   bindevent()
   bindQueueEvent()
-  function getIptval() {
-    return $('input').value || ''
-  }
+
   function bindQueueEvent() {
     $('queue').onclick = function (e) {
       // 兼容性处理
       var e = e || window.event;
       var target = e.target || e.srcElement;
-      DELETE(target.id)
+      queueAction.DELETE(target.id)
       render()
     }
   }
@@ -62,60 +61,70 @@
       // 兼容性处理
       var e = e || window.event;
       var target = e.target || e.srcElement;
-      if (data.length && data.length<=60) {
+      if (data.length <= 60) {
         if (getIptval().length <= 60) {
-          switch (target.id) {
-            case "leftIn":
-              UNSHIFT()
-              break;
-            case "rightIn":
-              PUSH()
-              break;
-            case "leftOut":
-              SHIFT()
-              break;
-            case "rightOut":
-              POP()
-              break;
-            default:
-              break;
+          if (checkNumber()) {
+            switch (target.id) {
+              case "leftIn":
+                queueAction.UNSHIFT()
+                break;
+              case "rightIn":
+                queueAction.PUSH()
+                break;
+              case "leftOut":
+                queueAction.SHIFT()
+                break;
+              case "rightOut":
+                queueAction.POP()
+                break;
+              default:
+                break;
+            }
+            queueAction.SORT()
+            render()
+          } else {
+            alert('请输入10-100之间的数值')
           }
-          setSort()
-          render()
         } else {
           alert('不能大于60个')
         }
-      }else{
-        alert('请输入！')
+      } else {
+        alert('暂无可操作数据！')
       }
     }
   }
-
-  function PUSH() {
-    getIptval() && data.push(getIptval())
+  var queueAction = {
+    PUSH: function () {
+      data.push(getIptval())
+    },
+    POP: function () {
+      data.pop(getIptval())
+    },
+    SHIFT: function () {
+      data.shift(getIptval())
+    },
+    UNSHIFT: function () {
+      data.unshift(getIptval())
+    },
+    DELETE: function (index) {
+      data = data[index] || data[index] == 0 && data.splice(index, 1)
+    },
+    SORT: function () {
+      data.sort((a, b) => a - b)
+    }
   }
-  function POP() {
-    getIptval() && data.pop(getIptval())
+  function checkNumber() {
+    return Number(getIptval()) > 10 && Number(getIptval()) < 100
   }
-  function SHIFT() {
-    getIptval() && data.shift(getIptval())
-
-  }
-  function UNSHIFT() {
-    getIptval() && data.unshift(getIptval())
-  }
-  function DELETE(index) {
-    data = data[index] || data[index] == 0 && data.splice(index, 1)
-  }
-  function setSort() {
-    data.sort((a, b) => a - b)
+  function getIptval() {
+    return $('input').value || ''
   }
   function render() {
     let str = ''
     for (i = 0; i < data.length; i++) {
-      str += `<span id='${i}' style='height:${Number(data[i])+20}px'>${data[i]}-</span>`
+      str += `<span id='${i}' style='height:${Number(data[i]) + 20}px'>${data[i]}-</span>`
     }
-    $('parent').innerHTML = str
+    $('res').innerHTML = str
   }
 
 </script>
