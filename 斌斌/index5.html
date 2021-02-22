@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<!-- 模拟一个队列，队列的每个元素是一个数字，初始队列为空
+有一个input输入框，以及4个操作按钮
+
+点击"左侧入"，将input中输入的数字从左侧插入队列中；
+点击"右侧入"，将input中输入的数字从右侧插入队列中；
+点击"左侧出"，读取并删除队列左侧第一个元素，并弹窗显示元素中数值；
+点击"右侧出"，读取并删除队列又侧第一个元素，并弹窗显示元素中数值；
+点击队列中任何一个元素，则该元素会被从队列中删除 -->
+
+<body>
+  <input type="number" id='input'>
+  <div>队列表演:<div id="queue"></div>
+  </div>
+  <div id='res'></div>
+  <ul id='btns'>
+    <li id='leftIn'>左侧入</li>
+    <li id='rightIn'>右侧入</li>
+    <li id='leftOut'>左侧出</li>
+    <li id='rightOut'>右侧出</li>
+  </ul>
+</body>
+
+</html>
+<style>
+  li {
+    cursor: pointer;
+  }
+  #queue span{
+    background: red;
+    display: inline-block;
+    vertical-align: top;
+  }
+</style>
+<script type="text/javascript">
+  let data = []
+  bindevent()
+  bindQueueEvent()
+  function getIptval() {
+    return document.getElementById('input').value || ''
+  }
+  function bindQueueEvent() {
+    let queue = document.getElementById('queue')
+    queue.onclick = function (e) {
+      // 兼容性处理
+      var e = e || window.event;
+      var target = e.target || e.srcElement;
+      DELETE(target.id)
+      render()
+    }
+  }
+  function bindevent() {
+    var ul = document.querySelector('ul');
+    ul.onclick = function (e) {
+      // 兼容性处理
+      var e = e || window.event;
+      var target = e.target || e.srcElement;
+      if (data.length<=60) {
+        if (getIptval() <= 60) {
+          switch (target.id) {
+            case "leftIn":
+              UNSHIFT()
+              break;
+            case "rightIn":
+              PUSH()
+              break;
+            case "leftOut":
+              SHIFT()
+              break;
+            case "rightOut":
+              POP()
+              break;
+            default:
+              break;
+          }
+          setSort()
+          render()
+        } else {
+          alert('不能大于60')
+        }
+      }else{
+        alert('请输入！')
+      }
+    }
+  }
+
+  function PUSH() {
+    getIptval() && data.push(getIptval())
+  }
+  function POP() {
+    getIptval() && data.pop(getIptval())
+  }
+  function SHIFT() {
+    getIptval() && data.shift(getIptval())
+
+  }
+  function UNSHIFT() {
+    getIptval() && data.unshift(getIptval())
+  }
+  function DELETE(index) {
+    data = data[index] || data[index] == 0 && data.splice(index, 1)
+  }
+  function setSort() {
+    data.sort((a, b) => a - b)
+  }
+  function render() {
+    let parent = document.getElementById('queue')
+    let str = ''
+    for (i = 0; i < data.length; i++) {
+      str += `<span id='${i}' style='height:${Number(data[i])+20}px'>${data[i]}-</span>`
+    }
+    parent.innerHTML = str
+  }
+
+</script>

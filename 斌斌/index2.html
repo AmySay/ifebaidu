@@ -35,7 +35,7 @@
     */
 
   })();
-  getsort()
+  structure()
   function structure() {
     let newList = [];
     for (l = 0; l < aqiData.length; l++) {
@@ -49,23 +49,16 @@
     if (newList.length) {
       newList.sort((a, b) => b.value - a.value)
     }
-    return newList
+    setHtml(newList)
   }
-  function getsort() {
-    let lsit = structure()
-    let filterList = lsit.filter(item => {
-      return item.value > 60
-    })
-    setHtml(filterList)
-  }
-
-  function setHtml(filterList) {
-    let parent = document.getElementById('aqi-list')
+  function setHtml(newList) {
     let str = ''
-    for (i = 0; i < filterList.length; i++) {
-      str += `<li>第${chnNumChar[i + 1]}名：${filterList[i].city}，${filterList[i].value}</li>`
+    for (i = 0; i < newList.length; i++) {
+      if(newList[i].value > 60){
+        str += `<li>第${chnNumChar[i + 1]}名：${newList[i].city}，${newList[i].value}</li>`
+      }
     }
-    parent.innerHTML = str
+    $('aqi-list').innerHTML = str
   }
 
 

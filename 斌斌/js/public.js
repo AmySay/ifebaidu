@@ -10,3 +10,6 @@ var chnNumChar = {
   8: '八',
   9: '九'
 };
+var $=function(id){
+  return document.getElementById(id)
+}

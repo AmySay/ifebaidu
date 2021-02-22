@@ -16,7 +16,9 @@
 点击队列中任何一个元素，则该元素会被从队列中删除 -->
 
 <body>
-  <input type="text" id='input'>
+  <input type="number" id='input' >
+  <div>队列表演:<div id="queue"></div>
+  </div>
   <div id='res'></div>
   <ul id='btns'>
     <li id='leftIn'>左侧入</li>
@@ -27,29 +29,77 @@
 </body>
 
 </html>
+<style>
+  li {
+    cursor: pointer;
+  }
+</style>
+<script type="text/javascript" src="./js/public.js"></script>
 <script type="text/javascript">
+  let data = []
   bindevent()
+  bindQueueEvent()
+  function getIptval() {
+    return  $('input').value || ''
+  }
+  function bindQueueEvent() {
+    $('queue').onclick = function (e) {
+      // 兼容性处理
+      var e = e || window.event;
+      var target = e.target || e.srcElement;
+      DELETE(target.id)
+      render()
+    }
+  }
   function bindevent() {
     var ul = document.querySelector('ul');
-
     ul.onclick = function (e) {
       // 兼容性处理
       var e = e || window.event;
       var target = e.target || e.srcElement;
-
       switch (target.id) {
         case "leftIn":
+          UNSHIFT()
           break;
         case "rightIn":
+          PUSH()
+          break;
+        case "leftOut":
+          SHIFT()
           break;
         case "rightOut":
-          break;
-        case "rightOut":
+          POP()
           break;
         default:
           break;
       }
+      render()
     }
+  }
+
+  function PUSH() {
+    getIptval() && data.push(getIptval())
+  }
+  function POP() {
+    getIptval() && data.pop(getIptval())
+  }
+  function SHIFT() {
+    getIptval() && data.shift(getIptval())
+
+  }
+  function UNSHIFT() {
+    getIptval() && data.unshift(getIptval())
+  }
+  function DELETE(index) {
+    data = data[index] || data[index] == 0 && data.splice(index, 1)
+  }
+
+  function render() {
+    let str = ''
+    for (i = 0; i < data.length; i++) {
+      str += `<span id='${i}'>${data[i]}-</span>`
+    }
+    $('queue').innerHTML = str
   }
 
 </script>
