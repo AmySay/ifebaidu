@@ -39,16 +39,16 @@
     vertical-align: top;
   }
 </style>
+<script type="text/javascript" src="./js/public.js"></script>
 <script type="text/javascript">
   let data = []
   bindevent()
   bindQueueEvent()
   function getIptval() {
-    return document.getElementById('input').value || ''
+    return $('input').value || ''
   }
   function bindQueueEvent() {
-    let queue = document.getElementById('queue')
-    queue.onclick = function (e) {
+    $('queue').onclick = function (e) {
       // 兼容性处理
       var e = e || window.event;
       var target = e.target || e.srcElement;
@@ -62,8 +62,8 @@
       // 兼容性处理
       var e = e || window.event;
       var target = e.target || e.srcElement;
-      if (data.length<=60) {
-        if (getIptval() <= 60) {
+      if (data.length && data.length<=60) {
+        if (getIptval().length <= 60) {
           switch (target.id) {
             case "leftIn":
               UNSHIFT()
@@ -83,7 +83,7 @@
           setSort()
           render()
         } else {
-          alert('不能大于60')
+          alert('不能大于60个')
         }
       }else{
         alert('请输入！')
@@ -111,12 +111,11 @@
     data.sort((a, b) => a - b)
   }
   function render() {
-    let parent = document.getElementById('queue')
     let str = ''
     for (i = 0; i < data.length; i++) {
       str += `<span id='${i}' style='height:${Number(data[i])+20}px'>${data[i]}-</span>`
     }
-    parent.innerHTML = str
+    $('parent').innerHTML = str
   }
 
 </script>
