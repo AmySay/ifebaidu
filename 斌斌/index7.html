@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>任务七：JavaScript和树（一）</title>
+</head>
+
+<body>
+  <div class="root ">
+    <div class="leaf_item">
+      <div class="leaf_item_ctn"> </div>
+      <div class="leaf_item_ctn"> </div>
+    </div>
+    <div class="leaf_item">
+      <div class="leaf_item_ctn"> </div>
+      <div class="leaf_item_ctn"> </div>
+    </div>
+  </div>
+  <div class="btns">
+    <button class="left">前调</button>
+    <button class="center">中调</button>
+    <button class="right">后调</button>
+  </div>
+
+
+</body>
+<style>
+  div {
+    border: 1px solid #cccccc;
+    background-color: #ffffff;
+  }
+  .btns{
+    display: flex;
+    width: 300px;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .root {
+    height: 250px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+  }
+
+  .leaf_item {
+    width: 200px;
+    height: 50%;
+    padding: 20px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    flex-shrink: 0;
+  }
+
+  .leaf_item_ctn {
+    flex-shrink: 0;
+    width: 40%;
+    height: 90%;
+
+  }
+
+  .red {
+    background-color: red;
+  }
+</style>
+
+</html>
+<script>
+  
+
+</script>

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IFE JavaScript Task 06</title>
+</head>
+<!-- 将新元素输入框从input改为textarea
+允许一次批量输入多个内容，格式可以为数字、中文、英文等，可以通过用回车，逗号（全角半角均可），顿号，空格（全角半角、Tab等均可）等符号作为不同内容的间隔
+增加一个查询文本输入框，和一个查询按钮，当点击查询时，将查询词在各个元素内容中做模糊匹配，将匹配到的内容进行特殊标识，如文字颜色等。举例，内容中有abcd，查询词为ab或bc，则该内容需要标识 -->
+
+<body>
+  <div>
+    <textarea id='textarea'></textarea>
+    <button type="button" id='insert' onclick="handelInsert()">插入</button>
+  </div>
+  <div>
+    <input type="text" id='search'>
+    <button type="button" onClick="handelSearch()">搜索</button>
+  </div>
+  <div>内容如下:<div id="allCtn"></div>
+</body>
+
+</html>
+<style>
+  li {
+    cursor: pointer;
+  }
+</style>
+<script type="text/javascript" src="./js/public.js"></script>
+<script type="text/javascript">
+  // 插入ctn，分离数组
+  function handelInsert() {
+    var list = $('textarea').value.split(/[^0-9a-zA-Z\u4e00-\u9fa5]+/).filter(function (item) {
+      if (item != null && item.length != 0) {
+        return true;
+      } else {
+        return false;
+      }
+    })
+    console.log(list)
+    render(list)
+  }
+ 
+  function render(list) {
+    let str = ''
+    for (i = 0; i < list.length; i++) {
+      str += `<span class='queueItem'>${list[i]}</span>`
+    }
+    $('allCtn').innerHTML = str
+  }
+  // 搜索匹配
+  function handelSearch() {
+    let doms =  Array.from(document.getElementsByClassName('queueItem'))
+    console.log(doms,$('search').value)
+    for (let l=0 ;l<doms.length;l++) {
+      if(doms[l].innerText.includes($('search').value)){
+        console.log(11)
+        doms[l].style='color:red'
+      }else{
+        doms[l].style=''
+      }
+    }
+  }
+
+</script>
