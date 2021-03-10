@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <div class="main">
+    <input type="text" class="ipt">
+    <button class="btn">校验</button>
+  </div>
+</body>
+
+</html>
+<script type="text/javascript" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script type="text/javascript">
+  // 校验规则：
+  // 1.字符数为4~16位
+  // 2.每个英文字母、数字、英文符号长度为1
+  // 3.每个汉字，中文符号长度为2
+  $(document).ready(function () {
+    $(".btn").click(function () {
+      let val = $('.ipt').val().trim()
+      if (val) {
+        check(val)
+      }
+    });
+    function check(val) {
+     let Chinese = new RegExp("[\u4E00-\u9FA5]+")
+     var english = new RegExp("[A-Za-z]+");
+      if(val.length>16 || val.length<4 ){
+        alert('字符数为4~16位')
+      }
+
+
+    }
+  });
+</script>

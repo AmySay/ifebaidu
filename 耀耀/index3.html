@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<style>
+  #edit {
+    height: 200px;
+    width: 400px;
+    border: 1px solid red;
+  }
+</style>
+
+<body>
+  <div id="edit" contenteditable='true'>dd<br /></div>
+  <br>
+  <div id="tags">
+    <button id="A">基本工资</button>
+    <button id="B">迟到扣款</button>
+    <button id="C">请假扣款</button>
+    <br>
+    <br>
+    <button id="flag1">()</button>
+    <button id="flag2">+</button>
+    <button id="flag3">-</button>
+    <button id="flag4">*</button>
+    <button id="flag5">/</button>
+  </div>
+</body>
+
+</html>
+<script type="text/javascript" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script type="text/javascript">
+  $(document).ready(function () {
+    // 定义最后光标对象
+    var lastEditRange;
+
+    $('#tags').on("click", function (e) {
+      addInner.call(e.target, e);
+    })
+    function addInner(target, e) {
+      let id = $(this).attr('id'),
+        editTxt = $('#edit').text();
+      if (id) {
+        // 获取编辑框对象
+        var edit = document.getElementById('edit')
+        // 编辑框设置焦点
+        edit.focus()
+        // 获取选定对象
+        var selection = getSelection()
+        // 判断是否有最后光标对象存在
+        if (lastEditRange) {
+          // 存在最后光标对象，选定对象清除所有光标并添加最后光标还原之前的状态
+          selection.removeAllRanges()
+          selection.addRange(lastEditRange)
+        }
+        // 如果是文本节点则先获取光标对象
+        var range = selection.getRangeAt(0)
+        // 获取光标对象的范围界定对象，一般就是textNode对象
+        var textNode = range.startContainer;
+        // 获取光标位置
+        var rangeStartOffset = range.startOffset;
+        var rangeSEndOffset = range.endOffset;
+        // 文本节点在光标位置处插入新的表情内容
+        textNode.insertData(rangeStartOffset, $(this).text())
+        // 光标移动到到原来的位置加上新内容的长度
+        range.setStart(textNode, rangeStartOffset + $(this).text().length)
+        // 光标开始和光标结束重叠
+        range.collapse(true)
+        // 清除选定对象的所有光标对象
+        selection.removeAllRanges()
+        // 插入新的光标对象
+        selection.addRange(range)
+        if (id == 'flag1') { //括号--设置光标
+          console.log('括号--设置光标')
+          setCaretPosition(document.getElementById('edit'), rangeSEndOffset+1)
+          // setCaretPosition(document.getElementById('edit'), $('#edit').text().length - 1)
+        }
+        // 无论如何都要记录最后光标对象
+        lastEditRange = selection.getRangeAt(0)
+      }
+
+    }
+
+    // 设置光标位置
+    function setCaretPosition(element, pos) {
+      var range, selection;
+      if (document.createRange)//Firefox, Chrome, Opera, Safari, IE 9+
+      {
+        range = document.createRange();//创建一个选中区域
+        range.selectNodeContents(element);//选中节点的内容
+        if (element.innerHTML.length > 0) {
+          range.setStart(element.childNodes[0], pos); //设置光标起始为指定位置
+        }
+        range.collapse(true);       //设置选中区域为一个点
+        selection = window.getSelection();//获取当前选中区域
+        selection.removeAllRanges();//移出所有的选中范围
+        selection.addRange(range);//添加新建的范围
+      }
+      else if (document.selection)//IE 8 and lower
+      {
+        range = document.body.createTextRange();//Create a range (a range is a like the selection but invisible)
+        range.moveToElementText(element);//Select the entire contents of the element with the range
+        range.collapse(false);//collapse the range to the end point. false means collapse to end rather than the start
+        range.select();//Select the range (make it the visible selection
+      }
+    }
+
+    // 编辑框点击事件
+    // $('#edit').click(function () {
+    //   console.log(11)
+    //   // 获取选定对象
+    //   var selection = getSelection()
+    //   // 设置最后光标对象
+    //   lastEditRange = selection.getRangeAt(0)
+    // })
+    // // 编辑框按键弹起事件
+    // $('#edit').keyup(function () {
+    //   // 获取选定对象
+    //   var selection = getSelection()
+    //   // 设置最后光标对象
+    //   lastEditRange = selection.getRangeAt(0)
+    // })
+
+  });
+</script>
