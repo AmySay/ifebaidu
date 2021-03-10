@@ -9,16 +9,18 @@
 
 <body>
   <div class="root">
-    <div class="leaf_item">
-      <div class="leaf_item_ctn"> </div>
-      <div class="leaf_item_ctn"> </div>
+    root
+    <div class="leaf_item">1
+      <div class="leaf_item_ctn">2 </div>
+      <div class="leaf_item_ctn">3 </div>
     </div>
-    <div class="leaf_item">
-      <div class="leaf_item_ctn"> </div>
-      <div class="leaf_item_ctn"> </div>
+    <div class="leaf_item">1
+      <div class="leaf_item_ctn">2 </div>
+      <div class="leaf_item_ctn">3 </div>
     </div>
   </div>
   <div id="btns">
+    <input type="text" id='search'>
     <button class="left">前序</button>
     <button class="center">中序</button>
     <button class="right">后序</button>
@@ -70,13 +72,20 @@
     animation: mymove 200ms ease-in;
   }
 
+  .green {
+    background-color: green;
+    animation: mymove 200ms ease-in;
+  }
+
   @keyframes mymove {
     30% {
       transition: scale(1)
     }
+
     60% {
       transition: scale(1.5)
     }
+
     100% {
       transition: scale(1)
     }
@@ -85,16 +94,19 @@
 </style>
 
 </html>
-<script type="text/javascript" src="./js/public.js"></script>
+<script src="http://code.jquery.com/jquery-latest.js"></script>
+<!-- <script type="text/javascript" src="./js/public.js"></script> -->
 <script type="text/javascript">
   (function () {
-    let rootNode = document.getElementsByClassName('root')[0]
-    let nodeArr = [], time = null;
-    $('btns').onclick = function (e) {
-      // 兼容性处理
-      var e = e || window.event;
-      var target = e.target || e.srcElement;
-      switch (target.className) {
+    let rootNode = $('.root')[0]
+    let nodeArr = [], time = null, msg = '';
+    $(document).on("click", function (e) {
+      handle.call(e.target, e);
+      // clickDom.call(e.target, e);
+    })
+    function handle(e){
+      // console.log($(this).attr('class'))
+      switch($(this).attr('class')){
         case "left":
           reset()
           recursionLeft(rootNode)
@@ -110,10 +122,11 @@
           recursionRight(rootNode)
           show()
           break;
-        default:
-          break;
       }
     }
+    // function clickDom(e){
+    //   console.log($(this).attr('class'))
+    // }
     // 前调 DLR
     function recursionLeft(node) {
       if (node) {
@@ -124,7 +137,7 @@
     }
     //  中调 LDR
     function recursionCenter(node) {
-      if(node){
+      if (node) {
         recursionCenter(node.firstElementChild);
         nodeArr.push(node)
         recursionCenter(node.lastElementChild);
@@ -132,7 +145,7 @@
     }
     //  后调LRD
     function recursionRight(node) {
-      if(node){
+      if (node) {
         recursionRight(node.firstElementChild);
         recursionRight(node.lastElementChild);
         nodeArr.push(node)
@@ -142,21 +155,32 @@
     function show() {
       var i = 0
       nodeArr[0].className = `${nodeArr[0].className} red`
-       time = setInterval(() => {
+      time = setInterval(() => {
         i++;
         if (i < nodeArr.length) {
+          // 正常遍历
           nodeArr[i - 1].className = `${nodeArr[i - 1].className.replace('red', '')}`
-          nodeArr[i].className = `${nodeArr[i].className} red`
+          nodeArr[i].className = `${nodeArr[i].className.replace('green', '')}`
+          // 按目标查询
+          if ($('#search').val() == nodeArr[i].innerText) {
+            nodeArr[i].className = `${nodeArr[i].className} green`
+          } else {
+            nodeArr[i].className = `${nodeArr[i].className} red`
+            msg = '没有找到目标'
+          }
         } else {
           clearInterval(time)
-          nodeArr[i-1].className = `${nodeArr[i-1].className.replace('red', '')}`
+          nodeArr[i - 1].className = `${nodeArr[i - 1].className.replace('red', '')}`
+          alert(msg)
         }
-      }, 1000);
+      }, 500);
 
     }
     function reset() {
       nodeArr = []
+      msg=''
       clearInterval(time)
+      
     }
   })()
 

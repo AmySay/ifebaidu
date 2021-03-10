@@ -1,12 +1,183 @@
-
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>任务八：JavaScript和树（二）</title>
+  <title>任务七：JavaScript和树（一）</title>
 </head>
+
 <body>
-  
+  <div class="root">
+    root
+    <div class="leaf_item">1
+      <div class="leaf_item_ctn">2 </div>
+      <div class="leaf_item_ctn">3 </div>
+    </div>
+    <div class="leaf_item">1
+      <div class="leaf_item_ctn">2 </div>
+      <div class="leaf_item_ctn">3 </div>
+    </div>
+  </div>
+  <div id="btns">
+    <input type="text" id='search'>
+    <button class="left">前序</button>
+    <button class="center">中序</button>
+    <button class="right">后序</button>
+  </div>
 </body>
+<style>
+  div {
+    border: 1px solid #cccccc;
+    background-color: #ffffff;
+  }
+
+  #btns {
+    border: none;
+    display: flex;
+    width: 300px;
+    justify-content: space-between;
+    align-items: center;
+    margin: 20px auto;
+  }
+
+  .root {
+    width: 80%;
+    margin: auto;
+    height: 250px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+  }
+
+  .leaf_item {
+    width: 200px;
+    height: 50%;
+    padding: 20px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    flex-shrink: 0;
+  }
+
+  .leaf_item_ctn {
+    flex-shrink: 0;
+    width: 40%;
+    height: 90%;
+
+  }
+  .red {
+    background-color: red;
+    animation: mymove 200ms ease-in;
+  }
+  .green {
+    background-color: green;
+    animation: mymove 200ms ease-in;
+  }
+
+  @keyframes mymove {
+    30% {
+      transition: scale(1)
+    }
+    60% {
+      transition: scale(1.5)
+    }
+    100% {
+      transition: scale(1)
+    }
+
+  }
+</style>
+
 </html>
+<script type="text/javascript" src="./js/public.js"></script>
+<script type="text/javascript">
+  (function () {
+    let rootNode = document.getElementsByClassName('root')[0]
+    let nodeArr = [], time = null,hasTarget=false;
+    $('btns').onclick = function (e) {
+      // 兼容性处理
+      var e = e || window.event;
+      var target = e.target || e.srcElement;
+      switch (target.className) {
+        case "left":
+          reset()
+          recursionLeft(rootNode)
+          show()
+          break;
+        case "center":
+          reset()
+          recursionCenter(rootNode)
+          show()
+          break;
+        case "right":
+          reset()
+          recursionRight(rootNode)
+          show()
+          break;
+        default:
+          break;
+      }
+    }
+    // 前调 DLR
+    function recursionLeft(node) {
+      if (node) {
+        nodeArr.push(node)
+        recursionLeft(node.firstElementChild);
+        recursionLeft(node.lastElementChild);
+      }
+    }
+    //  中调 LDR
+    function recursionCenter(node) {
+      if(node){
+        recursionCenter(node.firstElementChild);
+        nodeArr.push(node)
+        recursionCenter(node.lastElementChild);
+      }
+    }
+    //  后调LRD
+    function recursionRight(node) {
+      if(node){
+        recursionRight(node.firstElementChild);
+        recursionRight(node.lastElementChild);
+        nodeArr.push(node)
+      }
+    }
+    // 展示
+    function show() {
+      var i = 0
+      nodeArr[0].className = `${nodeArr[0].className} red`
+       time = setInterval(() => {
+        i++;
+        if (i < nodeArr.length) {
+          // 正常遍历
+            nodeArr[i - 1].className = `${nodeArr[i - 1].className.replace('red', '')}`
+            nodeArr[i].className = `${nodeArr[i].className} red`
+            // 按目标查询
+          if($('search').value == nodeArr[i].innerText ){
+            nodeArr[i].className = `${nodeArr[i].className} green`
+            hasTarget=true
+          }else{
+            nodeArr[i].className = `${nodeArr[i].className.replace('green', '')}`
+          }
+        } else {
+          clearInterval(time)
+          nodeArr[i-1].className = `${nodeArr[i-1].className.replace('red', '')}`
+        }
+      }, 500);
+      if(i >= nodeArr.length && !hasTarget){
+        alert('没有找到目标')
+      }
+
+    }
+    function reset() {
+      nodeArr = []
+      hasTarget=false
+      clearInterval(time)
+    }
+  })()
+
+
+
+
+</script>
